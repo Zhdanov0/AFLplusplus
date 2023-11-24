@@ -138,7 +138,7 @@ static char **afl_init_argv_persistent(int           *argc,
 
 }
 
-void set_argv(int* argc, int** argv) {
+void set_argv(int* argc, char** argv) {
 
   const int old_argc = *argc;
 
