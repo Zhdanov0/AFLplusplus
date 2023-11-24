@@ -41,13 +41,12 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 
-#define AFL_INIT_ARGV()          \
-  do {                           \
-                                 \
-    argv = afl_init_argv(&argc); \
-                                 \
-  } while (0)
+#define AFL_INIT_ARGV()           \                      
+  do {                            \
+    set_argv(&argc, argv);        \   
+  } while (0)                     \                      
 
 #define AFL_INIT_SET0(_p)        \
   do {                           \
@@ -86,7 +85,12 @@ static char **afl_init_argv(int *argc) {
   int   rc = 0;
 
   ssize_t num = read(0, in_buf, MAX_CMDLINE_LEN - 2);
-  if (num < 1) { _exit(1); }
+
+  if (num < 1) {
+    *argc = 0;
+    return;
+  }
+
   in_buf[num] = '\0';
   in_buf[num + 1] = '\0';
 
@@ -132,6 +136,19 @@ static char **afl_init_argv_persistent(int           *argc,
 
   return ret;
 
+}
+
+void set_argv(int* argc, int** argv) {
+
+  const int old_argc = *argc;
+
+  char** argv_tmp = afl_init_argv(argc);     
+
+  for (int i = old_argc, j = 0; i < old_argc + *argc; ++i, ++j) { 
+    argv[i] = argv_tmp[j];                                              
+  }   
+
+  *argc += old_argc;                      
 }
 
 #undef MAX_CMDLINE_LEN

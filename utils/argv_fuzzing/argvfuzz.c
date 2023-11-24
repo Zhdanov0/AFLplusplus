@@ -26,11 +26,6 @@ int __libc_start_main(int (*main)(int, char **, char **), int argc, char **argv,
   int (*orig)(int (*main)(int, char **, char **), int argc, char **argv,
               void (*init)(void), void (*fini)(void), void (*rtld_fini)(void),
               void *stack_end);
-  int    sub_argc;
-  char **sub_argv;
-
-  (void)argc;
-  (void)argv;
 
   orig = dlsym(RTLD_NEXT, __func__);
 
@@ -41,9 +36,9 @@ int __libc_start_main(int (*main)(int, char **, char **), int argc, char **argv,
 
   }
 
-  sub_argv = afl_init_argv(&sub_argc);
+  AFL_INIT_ARGV();
 
-  return orig(main, sub_argc, sub_argv, init, fini, rtld_fini, stack_end);
+  return orig(main, argc, argv, init, fini, rtld_fini, stack_end);
 
 }
 
