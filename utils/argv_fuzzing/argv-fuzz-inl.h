@@ -91,6 +91,12 @@ static char **afl_init_argv(int *argc) {
     return NULL;
   }
 
+  for (ssize_t i = 0; i < num; ++i) {
+    if (in_buf[i] == ' ') {
+      in_buf[i] = '\0';
+    }
+  }
+
   in_buf[num] = '\0';
   in_buf[num + 1] = '\0';
 
