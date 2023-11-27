@@ -43,10 +43,10 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#define AFL_INIT_ARGV()           \                      
+#define AFL_INIT_ARGV()           \
   do {                            \
-    set_argv(&argc, argv);        \   
-  } while (0)                     \                      
+    set_argv(&argc, argv);        \
+  } while (0)                     \
 
 #define AFL_INIT_SET0(_p)        \
   do {                           \
@@ -88,7 +88,7 @@ static char **afl_init_argv(int *argc) {
 
   if (num < 1) {
     *argc = 0;
-    return;
+    return NULL;
   }
 
   in_buf[num] = '\0';
